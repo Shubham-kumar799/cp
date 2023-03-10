@@ -66,34 +66,8 @@ using vt = vector<T>;
 #define prDouble(x) cout << fixed << setprecision(6) << x
 #define all(x) x.begin(), x.end()
 
-int toint(const string &s)
-{
-  stringstream ss;
-  ss << s;
-  int x;
-  ss >> x;
-  return x;
-}
-void tointV(const string &s, vi &ans)
-{
-  stringstream ss;
-  int x;
-  str temp;
-  ss << s;
-
-  while (!ss.eof())
-  {
-    /* extracting word by word from stream */
-    ss >> temp;
-    /* Checking the given word is integer or not */
-    if (stringstream(temp) >> x)
-      ans.pb(x);
-    /* To save from space at the end of string */
-    temp = "";
-  }
-}
-
-void prV(vi &v)
+template <class T>
+void prV(vector<T> &v)
 {
   for (auto i : v)
     cout << i << " ";
@@ -106,110 +80,7 @@ const int M = 1e9 + 7;
 const int S = 1e5 + 5;
 const ll MOD = 998244353;
 
-// custom comparator  for sets
-// Declaration -> set<int, cmp> s;
-// auto cmp = [](pi const &x, pi const &y)
-// {
-//   return x > y;
-// };
-
-// CUSTOM COMPARATOR FOR SETS
-// struct comp
-// {
-//   bool operator()(const pi &u, const pi &vertices)
-//   {
-//     int diff1 = u.second - u.first;
-//     int diff2 = vertices.second - vertices.first;
-//     return diff1 <= diff2;
-//   }
-// };
-ll add(ll a, ll b, ll mod)
-{
-  return (a + b) % mod;
-}
-
-ll mul(ll a, ll b, ll mod) { return (a * b) % mod; }
-
-int gcd(int a, int b)
-{
-  return b ? gcd(b, a % b) : a;
-}
-
-ll pow(ll a, ll b, ll m)
-{
-  ll ans = 1;
-  while (b)
-  {
-    if (b & 1)
-    {
-      ans = mul(a, ans, m);
-    }
-    a = mul(a, a, m);
-    b = b >> 1;
-  }
-  return ans;
-}
-
-// PERMUTATION AND COMBINATION
-
-// Using pascal
-// const int MAXN = 30;
-
-// ll pascal[MAXN + 1][MAXN + 1] = {0};
-// void computePascal()
-// {
-//   pascal[0][0] = 1;
-//   fr(i, 1, MAXN + 1)
-//   {
-//     pascal[i][0] = pascal[i][i] = 1;
-//     fr(k, 1, i)
-//     {
-//       pascal[i][k] = pascal[i - 1][k - 1] + pascal[i - 1][k];
-//     }
-//   }
-// }
-
-// const int MAXN = 1e6 + 1;
-// int factorial[MAXN];
-// int inv_fact[MAXN];
-
-// int inverse(int a, int m)
-// {
-//   return pow(a, m - 2, m);
-// }
-
-// void computeFactorialAndInverse(int m)
-// {
-//   factorial[0] = inv_fact[0] = 1;
-//   fr(i, 1, MAXN)
-//   {
-//     factorial[i] = mul(factorial[i - 1], i, M);
-//     inv_fact[i] = inverse(factorial[i], m);
-//   }
-// }
-
-// int nCr(int n, int r, int m)
-// {
-//   if (n < 0 || r < 0 || r > n)
-//     return 0;
-//   int numerator = factorial[n];
-//   int denominator = mul(inv_fact[r], inv_fact[n - r], m);
-//   return mul(numerator, demominator, m);
-// }
-
-void decToBinary(int n)
-{
-  // counter for binary array
-  str s = "0000";
-  int i = 0;
-  int d = n;
-  while (n > 0)
-  {
-    s[i] = ((n % 2) + '0');
-    n = n / 2;
-    i++;
-  }
-}
+void solve() {}
 
 int main()
 {
@@ -218,12 +89,6 @@ int main()
   int t = 1;
   cin >> t;
   while (t--)
-  {
-
-    continue;
-  end:
-    cout << endl;
-    continue;
-  }
+    solve();
   return 0;
 }
