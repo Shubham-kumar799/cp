@@ -73,7 +73,13 @@ void prV(vector<T> &v)
     cout << i << " ";
   cout << endl;
 }
+void pr(int x) { cout << x; }
+void prl(int x) { cout << x << endl; }
 
+const int dx[4] = {-1, 1, 0, 0};
+const int dy[4] = {0, 0, -1, 1};
+const int XX[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
+const int YY[8] = {-1, 0, 1, -1, 1, -1, 0, 1};
 const ll INF = 1e9;
 const ll NINF = -INF;
 const int M = 1e9 + 7;
