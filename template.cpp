@@ -66,6 +66,11 @@ using vt = vector<T>;
 #define prDouble(x) cout << fixed << setprecision(6) << x
 #define all(x) x.begin(), x.end()
 
+void pr(int x)
+{
+  cout << x;
+}
+void prl(int x) { cout << x << endl; }
 template <class T>
 void prV(vector<T> &v)
 {
@@ -73,8 +78,13 @@ void prV(vector<T> &v)
     cout << i << " ";
   cout << endl;
 }
-void pr(int x) { cout << x; }
-void prl(int x) { cout << x << endl; }
+template <class T>
+void prV1(vector<T> &v)
+{
+  int n = v.size();
+  fr(i, 1, n) pr(v[i]);
+  cout << endl;
+}
 
 const int dx[4] = {-1, 1, 0, 0};
 const int dy[4] = {0, 0, -1, 1};
