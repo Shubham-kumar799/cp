@@ -49,7 +49,7 @@ typedef map<int, vi> mivi;
 typedef unordered_set<int> usi;
 typedef unordered_set<ll> usll;
 template <class T>
-using mipq = priority_queue<T, vector<T>, greater<T>>;
+using minq = priority_queue<T, vector<T>, greater<T>>;
 template <class T>
 using maxq = priority_queue<T>;
 template <class T>
@@ -66,11 +66,18 @@ using vt = vector<T>;
 #define prDouble(x) cout << fixed << setprecision(6) << x
 #define all(x) x.begin(), x.end()
 
-void pr(int x)
+template <class T>
+void pr(T x)
 {
   cout << x;
 }
-void prl(int x) { cout << x << endl; }
+template <class T>
+void prs(T x)
+{
+  cout << x << " ";
+}
+template <class T>
+void prl(T x) { cout << x << endl; }
 template <class T>
 void prV(vector<T> &v)
 {
