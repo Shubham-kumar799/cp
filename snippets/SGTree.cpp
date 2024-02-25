@@ -77,146 +77,47 @@ const int S = 1e6 + 1;
 //   }
 // };
 
-class SGTree
-{
-  int *seg;
-  int *lazy;
+class SGTree {
+    public:
+        SGTree(int m){
+            n = m;
+            tree.resize(4*n , 0);
+        }
+        int query(int l, int r){
+            return query(0, 0, n - 1, l, r);
+        }
 
-public:
-  SGTree(int n)
-  {
-    seg = new int[4 * n + 1];
-  }
+        void update(int tarInd, int tarVal){
+            update(0, 0, n - 1, tarInd, tarVal);
+        }
+    private:
+        vector<int> tree;
+        int n;
 
-  void build(int ind, int low, int high, vi &arr)
-  {
-    if (low == high)
-    {
-      seg[ind] = arr[low];
-      return;
+    int query(int ind, int left, int right, int low, int high){
+        // NO OVERLAP
+        if(high < left || low > right) return INT_MIN;
+
+        // FULL OVERLAP
+        if(low <= left && high >= right) return tree[ind];
+
+        int mid = left + (right - left)/2;
+        return max({query(2*ind + 1, left, mid, low, high),
+        query(2*ind + 2, mid + 1, right, low, high), 0});
     }
 
-    int mid = low + ((high - low) >> 1);
-    build(2 * ind + 1, low, mid, arr);
-    build(2 * ind + 2, mid + 1, high, arr);
-    seg[ind] = min(seg[2 * ind + 1], seg[2 * ind + 2]);
-  }
+    void update(int ind , int left, int right, int tarInd, int tarVal){
+        
+        if(left == right){
+            tree[ind] = tarVal;
+            return;
+        }
 
-public:
-  int query(int ind, int low, int high, int l, int r)
-  {
-
-    // LAZY PROPAGATION
-    // if (lazy[ind] != 0)
-    //     {
-    //       seg[ind] += lazy[ind];
-    //       // propagting the update to the children nodes
-    //       if (low != high)
-    //       {
-    //         lazy[2 * ind + 1] += lazy[ind];
-    //         lazy[2 * ind + 2] += lazy[ind];
-    //       }
-    //       lazy[ind] = 0;
-    //     }
-
-    // No Overlap
-    if (low > r || high < l)
-      return INT_MAX;
-
-    // Complete Overlap
-    if (low >= l && high <= r)
-      return seg[ind];
-
-    // Partial Overlap
-    int mid = low + ((high - low) >> 1);
-    int left = query(2 * ind + 1, low, mid, l, r);
-    int right = query(2 * ind + 2, mid + 1, high, l, r);
-    return min(left, right);
-  }
-
-public:
-  // DEFINE A LAZY ARRAY FIRST (USES LAZY PROPAGATION)
-  void rangeUpdateLazy(int ind, int low, int high, int l, int r, int val)
-  {
-
-    // update previous remaining updates;
-    if (lazy[ind] != 0)
-    {
-      seg[ind] = (high - low + 1) * lazy[ind];
-      // propagting the update to the children nodes
-      if (low != high)
-      {
-        lazy[2 * ind + 1] += lazy[ind];
-        lazy[2 * ind + 2] += lazy[ind];
-      }
-      lazy[ind] = 0;
-    }
-
-    // no overlap
-    if (high < l || low > r)
-      return;
-
-    // complete overlap
-    if (low >= l && high <= r)
-    {
-      seg[ind] = (high - low + 1) * val;
-      // propagating the update downwards
-      if (low != high)
-      {
-        lazy[2 * ind + 1] += val;
-        lazy[2 * ind + 2] += val;
-      }
-      return;
-    }
-
-    // Partial overlap
-    int mid = low + ((high - low) >> 1);
-    rangeUpdateLazy(2 * ind + 1, low, mid, l, r, val);
-    rangeUpdateLazy(2 * ind + 2, mid + 1, high, l, r, val);
-    seg[ind] = min(seg[2 * ind + 1], seg[2 * ind + 2]);
-  }
-
-public:
-  void update(int ind, int low, int high, int i, int val)
-  {
-    if (low == high)
-    {
-      seg[ind] = val;
-      return;
-    }
-
-    int mid = low + ((high - low) >> 1);
-    if (i <= mid)
-      update(2 * ind + 1, low, mid, i, val);
-    else
-      update(2 * ind + 2, mid + 1, high, i, val);
-    seg[ind] = min(seg[2 * ind + 1], seg[2 * ind + 2]);
-  }
-
-public:
-  void rangeUpdate(int ind, int low, int high, int l, int r, vi &par, int p)
-  {
-    if (low == high)
-    {
-      if (low == p - 1 || par[low] != 0)
-        return;
-      seg[ind] = 0;
-      par[low] = p;
-      return;
-    }
-
-    int mid = low + ((high - low) >> 1);
-
-    if (l <= mid && seg[2 * ind + 1])
-    {
-      rangeUpdate(2 * ind + 1, low, mid, l, min(mid, r), par, p);
-    }
-    if (r > mid && seg[2 * ind + 2])
-    {
-      rangeUpdate(2 * ind + 2, mid + 1, high, max(l, mid + 1), r, par, p);
-    }
-    seg[ind] = seg[2 * ind + 1] | seg[2 * ind + 2];
-  }
+        int mid = left + (right - left)/2;
+        if(tarInd <= mid) update(2*ind + 1, left, mid, tarInd, tarVal);
+        else update(2*ind + 2, mid + 1, right, tarInd, tarVal);
+        tree[ind] = max(tree[2*ind + 1], tree[2*ind + 2]);
+    }  
 };
 
 int main()
