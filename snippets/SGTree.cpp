@@ -77,48 +77,111 @@ const int S = 1e6 + 1;
 //   }
 // };
 
-class SGTree {
-    public:
-        SGTree(int m){
-            n = m;
-            tree.resize(4*n , 0);
-        }
-        int query(int l, int r){
-            return query(0, 0, n - 1, l, r);
-        }
+class SGTree
+{
+public:
+	SGTree(int n)
+	{
+		this->n = n;
+		tree.resize(4 * n + 1, 0);
+		lazy.resize(4 * n + 1, 0);
+	}
 
-        void update(int tarInd, int tarVal){
-            update(0, 0, n - 1, tarInd, tarVal);
-        }
-    private:
-        vector<int> tree;
-        int n;
+	void build(vector<int> &v)
+	{
+		build(0, 0, n - 1, v);
+	}
 
-    int query(int ind, int left, int right, int low, int high){
-        // NO OVERLAP
-        if(high < left || low > right) return INT_MIN;
+	void range_update(int l, int r, int val)
+	{
+		range_update(0, 0, n - 1, l, r, val);
+	}
 
-        // FULL OVERLAP
-        if(low <= left && high >= right) return tree[ind];
+	int query(int l, int r)
+	{
+		return query(0, 0, n - 1, l, r);
+	}
 
-        int mid = left + (right - left)/2;
-        return max({query(2*ind + 1, left, mid, low, high),
-        query(2*ind + 2, mid + 1, right, low, high), 0});
-    }
+private:
+	int n;
+	vector<int> tree;
+	vector<int> lazy;
 
-    void update(int ind , int left, int right, int tarInd, int tarVal){
-        
-        if(left == right){
-            tree[ind] = tarVal;
-            return;
-        }
+	void build(int node, int start, int end, vector<int> &v)
+	{
+		if (start == end)
+		{
+			tree[node] = v[start];
+			return;
+		}
 
-        int mid = left + (right - left)/2;
-        if(tarInd <= mid) update(2*ind + 1, left, mid, tarInd, tarVal);
-        else update(2*ind + 2, mid + 1, right, tarInd, tarVal);
-        tree[ind] = max(tree[2*ind + 1], tree[2*ind + 2]);
-    }  
+		int mid = start + (end - start) / 2;
+		int left = 2 * node + 1;
+		int right = 2 * node + 2;
+		build(left, start, mid, v);
+		build(right, mid + 1, end, v);
+		tree[node] = max(tree[left], tree[right]);
+	}
+
+	void range_update(int node, int start, int end, int l, int r, int val)
+	{
+		pushdown(start, end, node);
+
+		// NO OVERLAP
+		if (r < start || l > end)
+			return;
+
+		// FULL OVERLAP
+		if (l <= start && r >= end)
+		{
+			lazy[node] = val;
+			pushdown(start, end, node);
+			return;
+		}
+
+		int mid = start + (end - start) / 2;
+		int left = 2 * node + 1;
+		int right = 2 * node + 2;
+		range_update(left, start, mid, l, r, val);
+		range_update(right, mid + 1, end, l, r, val);
+		tree[node] = max(tree[left], tree[right]);
+	}
+
+	int query(int node, int start, int end, int l, int r)
+	{
+		pushdown(start, end, node);
+
+		// NO OVERLAP
+		if (r < start || l > end)
+			return 0;
+
+		// FULL OVERLAP
+		if (l <= start && r >= end)
+			return tree[node];
+
+		int mid = start + (end - start) / 2;
+		int left = 2 * node + 1;
+		int right = 2 * node + 2;
+		int leftVal = query(left, start, mid, l, r);
+		int rightVal = query(right, mid + 1, end, l, r);
+		return max(leftVal, rightVal);
+	}
+
+	void pushdown(int start, int end, int node)
+	{
+		if (lazy[node] != 0)
+		{
+			tree[node] = lazy[node];
+			if (start != end)
+			{
+				lazy[2 * node + 1] = lazy[node];
+				lazy[2 * node + 2] = lazy[node];
+			}
+			lazy[node] = 0;
+		}
+	}
 };
+
 
 int main()
 {
